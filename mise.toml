@@ -21,3 +21,6 @@ run = "mkdir -p dist && go build -o dist/notify ./cli/notify"
 
 [tasks.check]
 depends = ["lint", "test"]
+
+[tasks.ci]
+depends = ["check"]
