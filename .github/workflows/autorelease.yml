@@ -24,10 +24,12 @@ jobs:
           pwd
           git status
 
-      - name: Install mise
+      - name: Setup mise
         uses: jdx/mise-action@v2
-        with:
-          install: true
+        # Removed install: true to avoid potential internal failure or automatic check run triggering
+
+      - name: Install tools
+        run: mise install
 
       - name: Debug Go Environment
         run: |
