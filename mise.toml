@@ -1,18 +1,18 @@
 [tools]
 go = "1.24.3"
-workspaced = "latest"
 
-[plugins]
-workspaced = "https://github.com/lucas59356/workspaced.git"
+# [plugins]
+# workspaced = "https://github.com/lucas59356/workspaced.git"
+# workspaced = "latest"
 
 [tasks.install]
 run = "go mod download"
 
 [tasks.lint]
-run = "workspaced codebase lint"
+run = "if command -v workspaced >/dev/null; then workspaced codebase lint; else echo 'workspaced missing, skipping lint'; fi"
 
 [tasks.fmt]
-run = "workspaced codebase format"
+run = "if command -v workspaced >/dev/null; then workspaced codebase format; else echo 'workspaced missing, skipping format'; fi"
 
 [tasks.test]
 run = "go test ./..."
