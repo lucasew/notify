@@ -19,5 +19,5 @@ run = "go generate ./..."
 [tasks.build]
 run = "mkdir -p dist && go build -o dist/notify ./cli/notify"
 
-[tasks.ci]
+[tasks.check]
 depends = ["lint", "test"]

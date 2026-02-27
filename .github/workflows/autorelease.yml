@@ -50,8 +50,8 @@ jobs:
           body: "Automated PR to update generated code."
           branch: "chore/codegen-update"
 
-      - name: Run CI
-        run: mise run ci
+      - name: Run Checks
+        run: mise run check
 
       - name: Build
         if: startsWith(github.ref, 'refs/tags/')
