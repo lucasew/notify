@@ -3,6 +3,7 @@ go = "1.24.3"
 
 [tasks.install]
 run = "go mod download"
+depends = ["install:*"]
 
 [tasks.lint]
 run = "if command -v workspaced >/dev/null; then workspaced codebase lint; else echo 'workspaced missing, skipping lint'; fi"
@@ -12,9 +13,11 @@ run = "if command -v workspaced >/dev/null; then workspaced codebase format; els
 
 [tasks.test]
 run = "go test ./..."
+depends = ["test:*"]
 
 [tasks.codegen]
 run = "go generate ./..."
+depends = ["codegen:*"]
 
 [tasks.build]
 run = "mkdir -p dist && go build -o dist/notify ./cli/notify"
