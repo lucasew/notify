@@ -1,0 +1,27 @@
+[tools]
+go = "1.24.3"
+workspaced = "latest"
+
+[plugins]
+workspaced = "https://github.com/lucas59356/workspaced.git"
+
+[tasks.install]
+run = "go mod download"
+
+[tasks.lint]
+run = "workspaced codebase lint"
+
+[tasks.fmt]
+run = "workspaced codebase format"
+
+[tasks.test]
+run = "go test ./..."
+
+[tasks.codegen]
+run = "go generate ./..."
+
+[tasks.build]
+run = "mkdir -p dist && go build -o dist/notify ./cli/notify"
+
+[tasks.ci]
+depends = ["lint", "test"]
