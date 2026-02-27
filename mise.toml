@@ -2,9 +2,6 @@
 go = "1.24.3"
 workspaced = "latest"
 
-[plugins]
-workspaced = "https://github.com/lucas59356/workspaced.git"
-
 [tasks.install]
 run = "go mod download"
 depends = ["install:*"]
