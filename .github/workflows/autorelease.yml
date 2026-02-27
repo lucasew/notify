@@ -10,17 +10,29 @@ on:
   pull_request:
 
 jobs:
-  ci-release:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      - name: Debug Environment
+        run: |
+          echo "Debugging Environment..."
+          ls -R
+          pwd
+          git status
+
       - name: Install mise
         uses: jdx/mise-action@v2
         with:
           install: true
+
+      - name: Debug Go Environment
+        run: |
+          go version
+          go env
 
       - name: Install dependencies
         run: mise run install
