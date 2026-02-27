@@ -26,10 +26,11 @@ jobs:
 
       - name: Setup mise
         uses: jdx/mise-action@v2
-        # Removed install: true to allow manual handling of potential auth failures with private tools
+        with:
+          install: false
 
       - name: Install tools
-        run: mise install || echo "Ignoring install failure due to missing private repo credentials"
+        run: mise install go
 
       - name: Debug Go Environment
         run: |
