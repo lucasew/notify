@@ -1,0 +1,60 @@
+name: autorelease
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  autorelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+
+      - name: Install dependencies
+        run: mise run install
+
+      - name: Run codegen
+        run: mise run codegen
+
+      - name: Check for differences
+        id: diff
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "has_diff=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR if differences exist
+        if: steps.diff.outputs.has_diff == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: update generated code"
+          title: "chore: update generated code"
+          branch: "chore/update-generated-code"
+
+      - name: Run CI
+        run: mise run ci
+
+      - name: Build
+        run: mise exec go -- go build -o notify-bin ./cli/notify/main.go || true
+
+      - name: Release
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+        run: gh release create ${{ github.ref_name }} notify-bin --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: notify-bin
+          path: notify-bin
