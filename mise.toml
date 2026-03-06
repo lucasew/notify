@@ -10,19 +10,37 @@ fmt = "workspaced codebase format"
 depends = ["test:*"]
 
 [tasks."test:go"]
-run = "go test -v ./..."
+run = """
+if [ -f go.mod ]; then
+  go test -v ./...
+else
+  echo 'No go.mod found, skipping test'
+fi
+"""
 
 [tasks.codegen]
 depends = ["codegen:*"]
 
 [tasks."codegen:go"]
-run = "go generate ./..."
+run = """
+if [ -f go.mod ]; then
+  go generate ./...
+else
+  echo 'No go.mod found, skipping codegen'
+fi
+"""
 
 [tasks.install]
 depends = ["install:*"]
 
 [tasks."install:go"]
-run = "[ -f go.mod ] && go mod download || echo 'No go.mod found, skipping download'"
+run = """
+if [ -f go.mod ]; then
+  go mod download
+else
+  echo 'No go.mod found, skipping download'
+fi
+"""
 
 [tasks.ci]
 depends = ["lint", "test"]
