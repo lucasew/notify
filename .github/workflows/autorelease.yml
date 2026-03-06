@@ -44,17 +44,15 @@ jobs:
       - name: Run CI
         run: mise run ci
 
-      - name: Build
-        run: mise exec go -- go build -o notify-bin ./cli/notify/main.go || true
-
       - name: Release
         if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
-        run: gh release create ${{ github.ref_name }} notify-bin --generate-notes
+        run: gh release create ${{ github.ref_name }} --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Artifact
+        if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v4
         with:
-          name: notify-bin
-          path: notify-bin
+          name: source-code
+          path: .

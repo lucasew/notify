@@ -22,7 +22,7 @@ run = "go generate ./..."
 depends = ["install:*"]
 
 [tasks."install:go"]
-run = "go mod download"
+run = "[ -f go.mod ] && go mod download || echo 'No go.mod found, skipping download'"
 
 [tasks.ci]
 depends = ["lint", "test"]
