@@ -1,4 +1,4 @@
-package logger
+package main
 
 import (
 	lg "github.com/lucas59356/go-logger"

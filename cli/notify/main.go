@@ -2,9 +2,7 @@ package main
 
 import (
 	"github.com/urfave/cli"
-	"github.com/lucas59356/notify/log"
 	"os"
-	"github.com/lucas59356/notify/plugin"
 )
 
 var (
@@ -12,18 +10,20 @@ var (
 )
 
 func main () {
-	log := logger.New("main")
+	log := New("main")
 	log.Debug("Iniciando...")
+
 	app.Name = "notify"
 	app.Usage = "Envia notificações para diversos destinos"
 	app.Author = "lucas59356"
 	app.Version = "0.1"
-	cmds, err := loader.Load(app) // Carrega os módulos, junto com seus comandos
+
+	app.Commands = []cli.Command{
+		GNTPCmd(),
+	}
+
+	err := app.Run(os.Args)
 	if err != nil {
-		log.Error(err)
+		reportError(err)
 	}
-	for _, cmd := range(cmds) { // Organiza os comandos do loader junto com os que já tem
-		app.Commands = append(app.Commands, cmd)
-	}
-	app.Run(os.Args)
 }
