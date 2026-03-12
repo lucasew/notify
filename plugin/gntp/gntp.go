@@ -6,11 +6,20 @@ import (
 	"github.com/mattn/go-gntp"
 	"github.com/lucas59356/notify/log"
 )
+const (
+	// PluginName Default plugin identifier
+	PluginName = "gntp"
+	// DefaultPort Default GNTP server port
+	DefaultPort = 23053
+	// DefaultHost Default GNTP server host
+	DefaultHost = "localhost"
+)
+
 var (
 	// Plugin Instance
 	Plugin GNTP
-	// AppName Name of the program
-	AppName = "notify"
+	// DefaultAppName Name of the program
+	DefaultAppName = "notify"
 )
 
 // GNTP Plugin definition
@@ -20,16 +29,15 @@ type GNTP struct {
 
 // SetUP Sets the plugin up for work
 func (g GNTP) SetUP() (cli.Command, error) {
-	name := "gntp"
 	description := "Envia notificações através do protocolo GNTP (Growl)"
 	return cli.Command{
-		HelpName: name,
+		HelpName: PluginName,
 		Description: description,
-		Name: name,
+		Name: PluginName,
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name: "title, t",
-				Value: AppName,
+				Value: DefaultAppName,
 				Usage: "Título da notificação",
 			},
 			cli.StringFlag{
@@ -44,13 +52,13 @@ func (g GNTP) SetUP() (cli.Command, error) {
 			},
 			cli.StringFlag{
 				Name: "host, c",
-				Value: "localhost",
+				Value: DefaultHost,
 				Usage: "Computador no qual será enviada a notificação (padrão localhost ou $GROWL_HOST)",
 				EnvVar: "GROWL_HOST",
 			},
 			cli.IntFlag{
 				Name: "port, p",
-				Value: 23053,
+				Value: DefaultPort,
 				Usage: "Porta para o qual será enviada a notificação (padrão 23053 ou $GROWL_PORT)",
 				EnvVar: "GROWL_PORT",
 			},
@@ -72,7 +80,7 @@ func (g GNTP) Handler(ctx *cli.Context) {
 	log.Debug("Preparando mensagem")
 	g.client.Server = fmt.Sprintf("%s:%d", ctx.String("host"), ctx.Int("port"))
 	n := gntp.Notification{
-		DisplayName: AppName,
+		DisplayName: DefaultAppName,
 		Enabled: true,
 		Event: "default",
 	}
@@ -83,7 +91,7 @@ func (g GNTP) Handler(ctx *cli.Context) {
 		Title: ctx.String("title"),
 		Text: ctx.String("text"),	
 	}
-	g.client.AppName = AppName
+	g.client.AppName = DefaultAppName
 	if ctx.String("password") != "" {
 		g.client.Password = ctx.String("password")
 	}

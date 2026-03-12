@@ -1,0 +1,25 @@
+[tools]
+"github:lucasew/workspaced" = "0.2.2"
+
+[tasks."ci:test"]
+run = '''
+#!/usr/bin/env bash
+if [ -f go.mod ]; then
+    go test ./...
+else
+    echo "go.mod not found, skipping tests"
+fi
+'''
+
+[tasks."ci:build"]
+run = '''
+#!/usr/bin/env bash
+if [ -f go.mod ]; then
+    go build ./...
+else
+    echo "go.mod not found, skipping build"
+fi
+'''
+
+[tasks."ci"]
+depends = ["ci:*"]

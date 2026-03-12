@@ -7,39 +7,41 @@ import (
 )
 
 var (
-	// Plugins All the loaded plugins
-	Plugins  = map[string]Plugin{}
+	// Providers All the loaded providers
+	Providers = map[string]Provider{}
 )
 
 // Load Called from main loader
 func Load(App *cli.App) ([]cli.Command, error) {
 	cmds := []cli.Command{}
-	log := logger.New("plugin-loader")
-	registerPlugins()
-	for index, plugin := range(Plugins) {
-		log.Debug("Setting up plugin %s", index)
-		cmd, err := plugin.SetUP()
+	loaderLogger := logger.New("plugin-loader")
+	registerProviders()
+	for index, provider := range Providers {
+		loaderLogger.Debug("Setting up provider %s", index)
+		cmd, err := provider.SetUP()
 		if err != nil {
-			log.Error(err)
+			loaderLogger.Error(err)
 			break
 		}
-		cmd.Action = plugin.Handler
+		cmd.Action = provider.Handler
 		cmds = append(cmds, cmd)
 	}	
 	return cmds, nil
 }
 
-func registerPlugins() {
-	LoadPlugin("gntp", gntp.Plugin)
+func registerProviders() {
+	LoadProvider("gntp", gntp.Plugin)
 }
 
-// LoadPlugin Função auxiliar que carrega os plugins
-func LoadPlugin(name string, plugin Plugin) {
-	Plugins[name] = plugin
+// LoadProvider Função auxiliar que carrega os providers
+func LoadProvider(name string, provider Provider) {
+	Providers[name] = provider
 }
 
-// Plugin Generic plugin
-type Plugin interface {
+// Provider defines the interface for notification providers.
+// As described by Fowler and standard Go conventions, interfaces
+// providing services are typically named with an "-er" suffix or a descriptive noun.
+type Provider interface {
 	SetUP()(cli.Command, error)
 	Handler(*cli.Context)
 }
