@@ -1,0 +1,1 @@
+- 2026-03-13: [Medium] Ignored errors mask bugs and vulnerabilities downstream.
