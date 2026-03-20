@@ -5,14 +5,10 @@ import (
 	"os"
 )
 
-const (
-	debug = true
-)
-
 // New Create new logger object
 func New(module string) lg.Logger {
 	g := lg.NewGenerator(os.Stdout)
-	if debug {
+	if os.Getenv("NOTIFY_DEBUG") == "1" || os.Getenv("NOTIFY_DEBUG") == "true" {
 		g.SetDebugLevel(lg.LogLevelDebug1)
 	}
 	return g.New(module)

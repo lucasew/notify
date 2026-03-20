@@ -1,0 +1,1 @@
+- 2026-03-20: [MEDIUM] Hardcoded debug config (always logging) and CLI-only password flags lead to sensitive information disclosure via logs and process list.
