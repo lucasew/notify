@@ -1,0 +1,1 @@
+- 2024-03-23: [High] Default weak hash algorithms in third-party libraries (e.g., MD5) should be overridden with strong alternatives (like SHA256 or SHA512).

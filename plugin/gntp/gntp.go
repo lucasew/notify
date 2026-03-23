@@ -84,6 +84,7 @@ func (g GNTP) Handler(ctx *cli.Context) {
 		Text: ctx.String("text"),	
 	}
 	g.client.AppName = AppName
+	g.client.HashAlgorithm = "SHA512"
 	if ctx.String("password") != "" {
 		g.client.Password = ctx.String("password")
 	}
